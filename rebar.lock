@@ -1,0 +1,8 @@
+{"1.2.0",
+[{<<"thoas">>,{pkg,<<"thoas">>,<<"0.2.0">>},0}]}.
+[
+{pkg_hash,[
+ {<<"thoas">>, <<"4D25BA900A1AAAEE758244C9B69CE0BC44E869ECBAA0817C2E783EE223C02F91">>}]},
+{pkg_hash_ext,[
+ {<<"thoas">>, <<"630AAEE57FB3FDE201578E787259E15E788A27733D49DE8DCCE1354DB1885B8D">>}]}
+].

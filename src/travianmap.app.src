@@ -1,0 +1,14 @@
+{application, travianmap,
+ [{description, "Get Travian data with Erlang"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {applications,
+   [kernel,
+    stdlib,
+    inets
+   ]},
+  {env,[]},
+  {modules, []},
+  {licenses, ["Apache 2.0"]},
+  {links, [{"GitHub", "https://github.com/SirWerto/travianmap"}]}
+ ]}.
