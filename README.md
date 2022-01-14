@@ -26,7 +26,7 @@ but I decided to split it from the main project because some Travianers could ne
 ```elixir
 # mix.exs
 def deps do
-  [{:travianmap, "~> 0.1"}]
+  [{:travianmap, "~> 0.2"}]
 end
 ```
 
