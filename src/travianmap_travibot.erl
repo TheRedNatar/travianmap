@@ -57,7 +57,7 @@ get_servers_urls(Url, List) ->
 	    lists:append(ServersUrls, List)
     end.
 
--spec parse_line(binary()) -> binary().
+-spec parse_line(binary()) -> {true, binary()} | false.
 parse_line(<<"<td class=\"l\"", Rest/binary>>) ->
     [_| [ServerUrl| _]] = binary:split(Rest, [<<"href=\"">>, <<"/\" target">>], [global, trim_all]),
     {true, ServerUrl};
