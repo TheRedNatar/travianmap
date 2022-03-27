@@ -2,49 +2,29 @@
 -include_lib("eunit/include/eunit.hrl").
 
 
-parse_line_normal_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES (3020,12,193,1,24802,'KOR ATEŞ',617,'VİNİTU',9,'OĞUZ',222,NULL);">>,
-    Output = {ok, {3020, 12, 193, 1, 24802, <<"KOR ATEŞ">>, 617, <<"VİNİTU">>, 9, <<"OĞUZ">>, 222}},
+parse_line_test() ->
+    Input = <<"INSERT INTO `x_world` VALUES (11481,52,172,1,49961,'Uusi kylä 6',18323,'sluibaaja',730,'HC',360,NULL,FALSE,NULL,NULL);">>,
+    Output = {ok, {11481, 52, 172, 1, 49961, <<"Uusi kylä 6">>, 18323, <<"sluibaaja">>, 730, <<"HC">>, 360, nil, false, nil, nil}},
+    ?assertEqual(Output, travianmap_mapline:parse_line(Input)).
+
+parse_line_tides_of_conquest_test() ->
+    Input = <<"INSERT INTO `x_world` VALUES (11481,52,172,1,49961,'Uusi kylä 6',18323,'sluibaaja',730,'HC',360,'Antibes',FALSE,TRUE,4);">>,
+    Output = {ok, {11481, 52, 172, 1, 49961, <<"Uusi kylä 6">>, 18323, <<"sluibaaja">>, 730, <<"HC">>, 360, <<"Antibes">>, false, true, 4}},
     ?assertEqual(Output, travianmap_mapline:parse_line(Input)).
 
 
-parse_line_bad_normal_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES (3020,'Failure',193,1,24802,'KOR ATEŞ',617,'VİNİTU',9,'OĞUZ',222,NULL);">>,
+parse_line_with_less_fields_test() ->
+    Input = <<"INSERT INTO `x_world` VALUES (3020,'Failure',193,1,24802,'KOR ATEŞ',617,'VİNİTU');">>,
     ?assertMatch({error, _Any}, travianmap_mapline:parse_line(Input)).
 
 
-parse_line_normal_with_more_comas_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES (673,71,199,3,31273,'Al,hambra',50,'Pr,,of',25,'VCTRX',704,NULL);">>,
-    Output = {ok, {673, 71, 199 ,3 , 31273, <<"Al,hambra">>, 50, <<"Pr,,of">>, 25, <<"VCTRX">>, 704}},
-    ?assertEqual(Output, travianmap_mapline:parse_line(Input)).
-
-parse_line_bad_normal_with_more_comas_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES ('Some',71,199,3,31273,'Al,hambra',50,'Pr,,of',25,'VCTRX',704,NULL);">>,
-    ?assertMatch({error, _Any}, travianmap_mapline:parse_line(Input)).
-
-
-parse_line_territories_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES (88942,120,-21,1,18711,'Venom777`s village',6544,'Venom777',0,'',212,'Apollonia Pontica',TRUE,FALSE,0);">>,
-    Output = {ok, {88942, 120, -21, 1, 18711, <<"Venom777`s village">>, 6544, <<"Venom777">>, 0, <<"">>, 212, <<"Apollonia Pontica">>, true, false, 0}},
+parse_line_with_more_comas_test() ->
+    Input = <<"INSERT INTO `x_world` VALUES (12331,100,170,1,26208,'Ruskij ,,,,,karabl idi..',3129,'oge',41,'INCA',2,NULL,TRUE,NULL,NULL);">>,
+    Output = {ok, {12331, 100, 170 ,1 , 26208, <<"Ruskij ,,,,,karabl idi..">>, 3129, <<"oge">>, 41, <<"INCA">>, 2, nil, true, nil, nil}},
     ?assertEqual(Output, travianmap_mapline:parse_line(Input)).
 
 
-parse_line_bad_territories_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES (88942,120,-21,1, 'failure','Venom777`s village',6544,'Venom777',0,'',212,'Apollonia Pontica',TRUE,FALSE,0);">>,
-    ?assertMatch({error, _Any}, travianmap_mapline:parse_line(Input)).
-
-
-    
-parse_line_territories_with_more_comas_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES (779,177,199,2,31888,'Giedrai,čia,i',5499,'Virtuve',570,'A,,,tlas',726,'Hyperborea',FALSE,FALSE,65);">>,
-    Output = {ok, {779, 177, 199, 2, 31888, <<"Giedrai,čia,i">>, 5499, <<"Virtuve">>, 570, <<"A,,,tlas">>, 726, <<"Hyperborea">>, false, false, 65}},
+parse_line_tides_of_conquest_with_more_comas_test() ->
+    Input = <<"INSERT INTO `x_world` VALUES (11481,52,172,1,49961,'Uusi,,,,kylä',18323,'sl,,uibaaja',730,'H,,C',360,'Antibes',FALSE,TRUE,4);">>,
+    Output = {ok, {11481, 52, 172, 1, 49961, <<"Uusi,,,,kylä">>, 18323, <<"sl,,uibaaja">>, 730, <<"H,,C">>, 360, <<"Antibes">>, false, true, 4}},
     ?assertEqual(Output, travianmap_mapline:parse_line(Input)).
-
-
-parse_line_bad_territories_with_more_comas_test() ->
-    Input = <<"INSERT INTO `x_world` VALUES (779,177,199,2,31888,'Giedrai,čia,i',5499,'failure','Virtuve',570,'A,,,tlas',726,'Hyperborea',FALSE,FALSE,65);">>,
-    ?assertMatch({error, _Any}, travianmap_mapline:parse_line(Input)).
-
-
-%% bad sample
-%% INSERT INTO `x_world` VALUES (54,-147,200,1,24119,'**',5048,'راس حربة',3,'WN.W1',684,NULL);

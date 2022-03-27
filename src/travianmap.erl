@@ -4,7 +4,7 @@
 
 -type url() :: binary().
 -type binary_map() :: binary().
--type travian_record() :: travianmap_mapline:normal_record() | travianmap_mapline:territory_record().
+-type travian_record() :: travianmap_mapline:travian_record().
 
 
 
