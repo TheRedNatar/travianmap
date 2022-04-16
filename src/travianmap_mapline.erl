@@ -17,8 +17,8 @@
 -type alliance_name() :: binary().
 -type population() :: integer(). %% positive_integer
 -type region() :: binary() | nil.
--type undef_1() :: boolean() | nil.
--type undef_2() :: boolean() | nil.
+-type is_capital() :: boolean() | nil.
+-type is_city() :: boolean() | nil.
 -type victory_points() :: integer() | nil.
 
 -type travian_record() :: {
@@ -34,8 +34,8 @@
 			alliance_name(),
 			population(),
 			region(),
-			undef_1(),
-			undef_2(),
+			is_capital(),
+			is_city(),
 			victory_points()}.
 	
 
@@ -82,8 +82,8 @@ parse_exact(Info) ->
      Alliance_Name,
      binary_to_integer(Population),
      travian_to_region(Region),
-     travian_to_undef1(Undef1),
-     travian_to_undef2(Undef2),
+     travian_to_bool(Undef1),
+     travian_to_bool(Undef2),
      travian_to_victory_points(VictoryPoints)}.
 
 
@@ -143,8 +143,8 @@ handle_normal([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Di
      Alliance_Name,
      binary_to_integer(Population),
      travian_to_region(Region),
-     travian_to_undef1(Undef1),
-     travian_to_undef2(Undef2),
+     travian_to_bool(Undef1),
+     travian_to_bool(Undef2),
      travian_to_victory_points(VictoryPoints)}.
 
 -spec handle_tides(Split :: [binary()]) -> travian_record().
@@ -177,8 +177,8 @@ handle_tides([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Dir
      Alliance_Name,
      binary_to_integer(Population),
      travian_to_region(Region),
-     travian_to_undef1(Undef1),
-     travian_to_undef2(Undef2),
+     travian_to_bool(Undef1),
+     travian_to_bool(Undef2),
      travian_to_victory_points(VictoryPoints)}.
 
 -spec travian_to_region(Region :: binary()) -> binary() | nil.
@@ -186,16 +186,11 @@ travian_to_region(<<"NULL">>) -> nil;
 travian_to_region(Region) -> Region.
 
 
--spec travian_to_undef1(Undef1 :: binary()) -> boolean() | nil.
-travian_to_undef1(<<"NULL">>) -> nil;
-travian_to_undef1(<<"TRUE">>) -> true;
-travian_to_undef1(<<"FALSE">>) -> false.
+-spec travian_to_bool(OptBool :: binary()) -> boolean() | nil.
+travian_to_bool(<<"NULL">>) -> nil;
+travian_to_bool(<<"TRUE">>) -> true;
+travian_to_bool(<<"FALSE">>) -> false.
 
-
--spec travian_to_undef2(Undef2 :: binary()) -> boolean() | nil.
-travian_to_undef2(<<"NULL">>) -> nil;
-travian_to_undef2(<<"TRUE">>) -> true;
-travian_to_undef2(<<"FALSE">>) -> false.
 
 -spec travian_to_victory_points(VictoryPoints :: binary()) -> integer() | nil.
 travian_to_victory_points(<<"NULL">>) -> nil;
