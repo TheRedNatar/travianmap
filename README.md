@@ -7,6 +7,8 @@ server urls.
 
 It uses [inets](https://www.erlang.org/doc/man/inets.html) for fetching the data and [thoas](https://github.com/lpil/thoas) to handle the json format.
 
+You can find the info of the snapshot [here].(https://github.com/SirWerto/travianmap/blob/master/src/travianmap_mapline.erl#L24) 
+
 I develop TravianMap for using it in my personal [Travian project](https://github.com/SirWerto/Mi-intento-final-de-Travian)
 but I decided to split it from the main project because some Travianers could need it in the future :).
 
