@@ -1,6 +1,7 @@
 -module(travianmap_mapline).
 
 -export([parse_line/1]).
+-export_type([travian_record/0]).
 
 -define(bytes_line, 32).
 
@@ -213,10 +214,10 @@ try_line(Parser, Info) ->
 	Record ->
 	    case travianmap_healthcheck:is_healthy(Record) of
 		true -> {ok, Record};
-		false -> {error, <<"Healthy check was not passed, please create an issue here https://github.com/SirWerto/travianmap/issues. Thank you !!">>}
+		{false, Fun} -> {error, {Record, Fun}}
 	    end
     catch
-	error:Error -> {error, Error}
+	error:Error -> {error, {Error, Info}}
     end.
 
 				     
