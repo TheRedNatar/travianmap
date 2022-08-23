@@ -1,6 +1,7 @@
 -module(travianmap_mapline).
 
 -export([parse_line/1]).
+-export_type([travian_record/0]).
 
 -define(bytes_line, 32).
 
@@ -66,8 +67,8 @@ parse_exact(Info) ->
      Alliance_Name,
      Population,
      Region,
-     Undef1,
-     Undef2,
+     Is_Capital,
+     Is_City,
      VictoryPoints] = Trav_Tuple,
 
     {binary_to_integer(Grid_Position),
@@ -82,8 +83,8 @@ parse_exact(Info) ->
      Alliance_Name,
      binary_to_integer(Population),
      travian_to_region(Region),
-     travian_to_bool(Undef1),
-     travian_to_bool(Undef2),
+     travian_to_bool(Is_Capital),
+     travian_to_bool(Is_City),
      travian_to_victory_points(VictoryPoints)}.
 
 
@@ -127,8 +128,8 @@ handle_normal([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Di
 
     [Population,
      Region,
-     Undef1,
-     Undef2,
+     Is_Capital,
+     Is_City,
      VictoryPoints] = binary:split(Group2, <<",">>, [global, trim_all]),
     
     {binary_to_integer(Grid_Position),
@@ -143,8 +144,8 @@ handle_normal([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Di
      Alliance_Name,
      binary_to_integer(Population),
      travian_to_region(Region),
-     travian_to_bool(Undef1),
-     travian_to_bool(Undef2),
+     travian_to_bool(Is_Capital),
+     travian_to_bool(Is_City),
      travian_to_victory_points(VictoryPoints)}.
 
 -spec handle_tides(Split :: [binary()]) -> travian_record().
@@ -161,8 +162,8 @@ handle_tides([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Dir
      Village_Id] = binary:split(Group1, <<",">>, [global, trim_all]),
     
 
-    [Undef1,
-     Undef2,
+    [Is_Capital,
+     Is_City,
      VictoryPoints] = binary:split(Group2, <<",">>, [global, trim_all]),
     
     {binary_to_integer(Grid_Position),
@@ -177,8 +178,8 @@ handle_tides([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Dir
      Alliance_Name,
      binary_to_integer(Population),
      travian_to_region(Region),
-     travian_to_bool(Undef1),
-     travian_to_bool(Undef2),
+     travian_to_bool(Is_Capital),
+     travian_to_bool(Is_City),
      travian_to_victory_points(VictoryPoints)}.
 
 -spec travian_to_region(Region :: binary()) -> binary() | nil.
@@ -210,9 +211,13 @@ has_minimun_fourteen_comas_policy(Info) ->
 -spec try_line(Parser :: function(), Info :: binary()) -> {ok, travian_record()} | {error, any()}.
 try_line(Parser, Info) ->
     try Parser(Info) of
-	Record -> {ok, Record}
+	Record ->
+	    case travianmap_healthcheck:is_healthy(Record) of
+		true -> {ok, Record};
+		{false, Fun} -> {error, {Record, Fun}}
+	    end
     catch
-	error:Error -> {error, Error}
+	error:Error -> {error, {Error, Info}}
     end.
 
 				     
