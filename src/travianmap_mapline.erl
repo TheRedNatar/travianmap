@@ -20,6 +20,7 @@
 -type region() :: binary() | nil.
 -type is_capital() :: boolean() | nil.
 -type is_city() :: boolean() | nil.
+-type has_harbor() :: boolean() | nil.
 -type victory_points() :: integer() | nil.
 
 -type travian_record() :: {
@@ -37,6 +38,7 @@
 			region(),
 			is_capital(),
 			is_city(),
+			has_harbor(),
 			victory_points()}.
 	
 
@@ -46,7 +48,7 @@ parse_line(DirtyLine) ->
     Info_Size = byte_size(DirtyLine) - ?bytes_line,
     <<"INSERT INTO `x_world` VALUES (", Info:Info_Size/binary,");">> = DirtyLine,
 
-    case has_minimun_fourteen_comas_policy(Info) of
+    case has_minimun_fifteen_comas_policy(Info) of
 	exact -> try_line(fun parse_exact/1, Info);
 	more -> try_line(fun parse_more/1, Info);
 	less -> {error, "broken line, not enought comas"}
@@ -69,6 +71,7 @@ parse_exact(Info) ->
      Region,
      Is_Capital,
      Is_City,
+     Has_Harbor,
      VictoryPoints] = Trav_Tuple,
 
     {binary_to_integer(Grid_Position),
@@ -85,6 +88,7 @@ parse_exact(Info) ->
      travian_to_region(Region),
      travian_to_bool(Is_Capital),
      travian_to_bool(Is_City),
+     travian_to_bool(Has_Harbor),
      travian_to_victory_points(VictoryPoints)}.
 
 
@@ -130,6 +134,7 @@ handle_normal([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Di
      Region,
      Is_Capital,
      Is_City,
+     Has_Harbor,
      VictoryPoints] = binary:split(Group2, <<",">>, [global, trim_all]),
     
     {binary_to_integer(Grid_Position),
@@ -146,6 +151,7 @@ handle_normal([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Di
      travian_to_region(Region),
      travian_to_bool(Is_Capital),
      travian_to_bool(Is_City),
+     travian_to_bool(Has_Harbor),
      travian_to_victory_points(VictoryPoints)}.
 
 -spec handle_tides(Split :: [binary()]) -> travian_record().
@@ -164,6 +170,7 @@ handle_tides([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Dir
 
     [Is_Capital,
      Is_City,
+     Has_Harbor,
      VictoryPoints] = binary:split(Group2, <<",">>, [global, trim_all]),
     
     {binary_to_integer(Grid_Position),
@@ -180,6 +187,7 @@ handle_tides([Group1, Village_Name, Player_Id_Dirt, Player_Name, Alliance_Id_Dir
      travian_to_region(Region),
      travian_to_bool(Is_Capital),
      travian_to_bool(Is_City),
+     travian_to_bool(Has_Harbor),
      travian_to_victory_points(VictoryPoints)}.
 
 -spec travian_to_region(Region :: binary()) -> binary() | nil.
@@ -198,11 +206,11 @@ travian_to_victory_points(<<"NULL">>) -> nil;
 travian_to_victory_points(StringPoints) -> binary_to_integer(StringPoints).
 
 
--spec has_minimun_fourteen_comas_policy(Info :: binary()) -> exact | more | less.
-has_minimun_fourteen_comas_policy(Info) ->
+-spec has_minimun_fifteen_comas_policy(Info :: binary()) -> exact | more | less.
+has_minimun_fifteen_comas_policy(Info) ->
     case length(binary:matches(Info, <<",">>)) of
-	14 -> exact;
-	X when X > 14 -> more;
+	15 -> exact;
+	X when X > 15 -> more;
 	_ -> less
     end.
 
