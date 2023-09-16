@@ -1,6 +1,6 @@
 -module(travianmap).
 
--export([parse_map/2, get_urls/0, get_urls/1, get_map/1, get_info/1]).
+-export([parse_map/2, get_urls/0, get_map/1, get_info/1]).
 
 -type url() :: binary().
 -type binary_map() :: binary().
@@ -20,32 +20,7 @@ parse_map(Binary_Map, no_filter) ->
 % @doc Get all the current urls of the travian servers.
 -spec get_urls() -> {ok, [url()]} | {error, any()}.
 get_urls() ->
-    get_urls(all).
-
--spec get_urls(all | travian_status | travibot) -> {ok, [url()]} | {error, any()}.
-get_urls(travian_status) ->
-    travianmap_travian_status:get_urls();
-get_urls(travibot) ->
-    travianmap_travibot:get_urls();
-get_urls(all) ->
-    case travianmap_travian_status:get_urls() of
-	{error, Reason1} -> 
-	    case travianmap_travibot:get_urls() of
-		{error, Reason2} -> {error, {Reason1, Reason2}};
-		{ok, Urls} -> {ok, Urls}
-	    end;
-	{ok, Urls} -> 
-	    case travianmap_travibot:get_urls() of
-		{error, _Reason} -> Urls;
-		{ok, Urls2} -> 
-		    Nodups = sets:to_list(
-			       sets:from_list(
-				 lists:append(Urls, Urls2)
-				)
-			      ),
-		    {ok, Nodups}
-	    end
-    end.
+    travianmap_game_world_schedule:get_urls().
 
 
 % @doc Fetch the map of a current url.

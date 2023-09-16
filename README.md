@@ -2,15 +2,14 @@
 
 A simple library to deal with the bad Travian "API". It is a best effort tool so when it faces against
 an inconsistency of the Travian API, TravianMap discards it and continue. TranvianMap get the urls from the
-[Travian Status](https://status.travian.com/) web page and get the map information appending /map.sql to the
+[Travian GameWorld Schedule](https://blog.travian.com/gameworld-schedule) blog page and get the map information appending /map.sql to the
 server urls.
 
 It uses [inets](https://www.erlang.org/doc/man/inets.html) for fetching the data and [thoas](https://github.com/lpil/thoas) to handle the json format.
 
 You can find the info of the snapshot [here](https://github.com/SirWerto/travianmap/blob/master/src/travianmap_mapline.erl#L24).
 
-I develop TravianMap for using it in my personal [Travian project](https://github.com/SirWerto/Mi-intento-final-de-Travian)
-but I decided to split it from the main project because some Travianers could need it in the future :).
+At [TheRedNatar](https://www.therednatar.com/) we develop TravianMap for fetching and parsing the map.sql that Travian offers.
 
 
 ## Installation
@@ -28,7 +27,7 @@ but I decided to split it from the main project because some Travianers could ne
 ```elixir
 # mix.exs
 def deps do
-  [{:travianmap, "~> 0.3.1"}]
+  [{:travianmap, "~> 0.6.0"}]
 end
 ```
 
