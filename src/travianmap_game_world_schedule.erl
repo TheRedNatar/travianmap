@@ -67,7 +67,7 @@ get_server_url_from_redirect(TableUrl) when is_binary(TableUrl)->
 	    case lists:filter(IsLocation, HttpHeaders) of
 		[{"location", RedirectedUrl}] ->
 		    [ServerUrl, _] = string:split(RedirectedUrl, "/", trailing),
-			{ok, ServerUrl};
+			{ok, list_to_binary(ServerUrl)};
 		X -> {error, {location_not_founded, X}}
 
 		end;

@@ -8,10 +8,10 @@
 
 % @doc Parse a binary map and transform the results in to a list of tuples.
 -spec parse_map(Binary_Map :: binary(), filter | no_filter) -> [{ok, travian_record()} | {error, any()}] | [travian_record()].
-parse_map(Binary_Map, filter) ->
+parse_map(Binary_Map, filter) when is_binary(Binary_Map) ->
     travianmap_map:parse_map(Binary_Map);
 
-parse_map(Binary_Map, no_filter) ->
+parse_map(Binary_Map, no_filter) when is_binary(Binary_Map) ->
     travianmap_map:parse_map_nofilter(Binary_Map).
 
 
@@ -22,7 +22,7 @@ get_urls() ->
 
 % @doc Fetch the map of a current url.
 -spec get_map(Url :: binary()) -> {ok, binary()} | {error, any()}.
-get_map(Url) ->
+get_map(Url) when is_binary(Url) ->
     Options = [{body_format, binary},
 	      {full_result, false}],
     Endpoint = binary:bin_to_list(Url) ++ "/map.sql",
@@ -34,6 +34,6 @@ get_map(Url) ->
 
 % @doc Fetch the aditional info of a current url.
 -spec get_info(Url :: binary()) -> {ok, map()} | {error, any()}.
-get_info(Url) ->
+get_info(Url) when is_binary(Url) ->
     travianmap_info:get_info(Url).
 
