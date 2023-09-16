@@ -2,8 +2,6 @@
 
 -export([parse_map/2, get_urls/0, get_map/1, get_info/1]).
 
--type url() :: binary().
--type binary_map() :: binary().
 -type travian_record() :: travianmap_mapline:travian_record().
 
 
@@ -18,18 +16,24 @@ parse_map(Binary_Map, no_filter) ->
 
 
 % @doc Get all the current urls of the travian servers.
--spec get_urls() -> {ok, [url()]} | {error, any()}.
+-spec get_urls() -> {ok, [binary()]} | {error, any()}.
 get_urls() ->
     travianmap_game_world_schedule:get_urls().
 
-
 % @doc Fetch the map of a current url.
--spec get_map(Url :: url()) -> {ok, binary_map()} | {error, any()}.
+-spec get_map(Url :: binary()) -> {ok, binary()} | {error, any()}.
 get_map(Url) ->
-    travianmap_travian_status:get_map(Url).
+    Options = [{body_format, binary},
+	      {full_result, false}],
+    Endpoint = binary:bin_to_list(Url) ++ "/map.sql",
+    case httpc:request(get, {Endpoint, []}, [], Options) of
+	{ok, {200, Body}} -> {ok, Body};
+	{ok, {StatusCode, _Body}} -> {error, {bad_status_code, StatusCode}};
+	{error, Reason} -> {error, Reason}
+    end.
 
 % @doc Fetch the aditional info of a current url.
--spec get_info(Url :: url()) -> {ok, map()} | {error, any()}.
+-spec get_info(Url :: binary()) -> {ok, map()} | {error, any()}.
 get_info(Url) ->
     travianmap_info:get_info(Url).
 

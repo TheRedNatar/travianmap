@@ -1,6 +1,6 @@
 {application, travianmap,
  [{description, "Get Travian data with Erlang"},
-  {vsn, "0.6.0"},
+  {vsn, "0.6.1"},
   {registered, []},
   {applications,
    [kernel,
