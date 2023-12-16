@@ -6,39 +6,46 @@
 
 -define(bytes_line, 32).
 
--type grid_position() :: integer(). %% positive_integer
+%% positive_integer
+-type grid_position() :: integer().
 -type x_position() :: integer().
 -type y_position() :: integer().
 -type tribe() :: 0..7.
--type village_id() :: integer(). %% positive_integer
+%% positive_integer
+-type village_id() :: integer().
 -type village_name() :: binary().
--type player_id() :: integer(). %% positive_integer
+%% positive_integer
+-type player_id() :: integer().
 -type player_name() :: binary().
--type alliance_id() :: integer(). %% positive_integer
+%% positive_integer
+-type alliance_id() :: integer().
 -type alliance_name() :: binary().
--type population() :: integer(). %% positive_integer
+%% positive_integer
+-type population() :: integer().
 -type region() :: binary() | nil.
 -type is_capital() :: boolean() | nil.
 -type is_city() :: boolean() | nil.
 -type has_harbor() :: boolean() | nil.
 -type victory_points() :: integer() | nil.
 -type travian_record() ::
-    {grid_position(),
-     x_position(),
-     y_position(),
-     tribe(),
-     village_id(),
-     village_name(),
-     player_id(),
-     player_name(),
-     alliance_id(),
-     alliance_name(),
-     population(),
-     region(),
-     is_capital(),
-     is_city(),
-     has_harbor(),
-     victory_points()}.
+    {
+        grid_position(),
+        x_position(),
+        y_position(),
+        tribe(),
+        village_id(),
+        village_name(),
+        player_id(),
+        player_name(),
+        alliance_id(),
+        alliance_name(),
+        population(),
+        region(),
+        is_capital(),
+        is_city(),
+        has_harbor(),
+        victory_points()
+    }.
 
 -spec parse_line(DirtyLine :: binary()) -> {ok, travian_record()} | {error, any()}.
 parse_line(DirtyLine) ->
@@ -58,76 +65,87 @@ parse_line(DirtyLine) ->
 parse_exact(Info) ->
     Trav_Tuple =
         binary:split(
-            binary:replace(Info, <<"'">>, <<"">>, [global]), <<",">>, [global]),
-    [Grid_Position,
-     X_Position,
-     Y_Position,
-     Tribe,
-     Village_Id,
-     Village_Name,
-     Player_Id,
-     Player_Name,
-     Alliance_Id,
-     Alliance_Name,
-     Population,
-     Region,
-     Is_Capital,
-     Is_City,
-     Has_Harbor,
-     VictoryPoints] =
+            binary:replace(Info, <<"'">>, <<"">>, [global]), <<",">>, [global]
+        ),
+    [
+        Grid_Position,
+        X_Position,
+        Y_Position,
+        Tribe,
+        Village_Id,
+        Village_Name,
+        Player_Id,
+        Player_Name,
+        Alliance_Id,
+        Alliance_Name,
+        Population,
+        Region,
+        Is_Capital,
+        Is_City,
+        Has_Harbor,
+        VictoryPoints
+    ] =
         Trav_Tuple,
 
-    {binary_to_integer(Grid_Position),
-     binary_to_integer(X_Position),
-     binary_to_integer(Y_Position),
-     binary_to_integer(Tribe),
-     binary_to_integer(Village_Id),
-     Village_Name,
-     binary_to_integer(Player_Id),
-     Player_Name,
-     binary_to_integer(Alliance_Id),
-     Alliance_Name,
-     binary_to_integer(Population),
-     travian_to_region(Region),
-     travian_to_bool(Is_Capital),
-     travian_to_bool(Is_City),
-     travian_to_bool(Has_Harbor),
-     travian_to_victory_points(VictoryPoints)}.
+    {
+        binary_to_integer(Grid_Position),
+        binary_to_integer(X_Position),
+        binary_to_integer(Y_Position),
+        binary_to_integer(Tribe),
+        binary_to_integer(Village_Id),
+        Village_Name,
+        binary_to_integer(Player_Id),
+        Player_Name,
+        binary_to_integer(Alliance_Id),
+        Alliance_Name,
+        binary_to_integer(Population),
+        travian_to_region(Region),
+        travian_to_bool(Is_Capital),
+        travian_to_bool(Is_City),
+        travian_to_bool(Has_Harbor),
+        travian_to_victory_points(VictoryPoints)
+    }.
 
 -spec parse_more(Info :: binary()) -> travian_record().
 parse_more(Info) ->
     % You should parse it sequentially
     case binary:split(Info, <<"'">>, [global]) of
         Tides =
-            [_Group1,
-             _Village_Name,
-             _Player_Id_Dirt,
-             _Player_Name,
-             _Alliance_Id_Dirt,
-             _Alliance_Name,
-             _Population_Dirt,
-             _Region,
-             _Group2] ->
+                [
+                    _Group1,
+                    _Village_Name,
+                    _Player_Id_Dirt,
+                    _Player_Name,
+                    _Alliance_Id_Dirt,
+                    _Alliance_Name,
+                    _Population_Dirt,
+                    _Region,
+                    _Group2
+                ] ->
             handle_tides(Tides);
         Normal =
-            [_Group1,
-             _Village_Name,
-             _Player_Id_Dirt,
-             _Player_Name,
-             _Alliance_Id_Dirt,
-             _Alliance_Name,
-             _Group2] ->
+                [
+                    _Group1,
+                    _Village_Name,
+                    _Player_Id_Dirt,
+                    _Player_Name,
+                    _Alliance_Id_Dirt,
+                    _Alliance_Name,
+                    _Group2
+                ] ->
             handle_normal(Normal)
     end.
 
 -spec handle_normal(Split :: [binary()]) -> travian_record().
-handle_normal([Group1,
-               Village_Name,
-               Player_Id_Dirt,
-               Player_Name,
-               Alliance_Id_Dirt,
-               Alliance_Name,
-               Group2]) ->
+handle_normal([
+    Group1,
+    Village_Name,
+    Player_Id_Dirt,
+    Player_Name,
+    Alliance_Id_Dirt,
+    Alliance_Name,
+    Group2
+]) ->
     Player_Id = binary:replace(Player_Id_Dirt, <<",">>, <<"">>, [global]),
     Alliance_Id = binary:replace(Alliance_Id_Dirt, <<",">>, <<"">>, [global]),
 
@@ -137,33 +155,37 @@ handle_normal([Group1,
     [Population, Region, Is_Capital, Is_City, Has_Harbor, VictoryPoints] =
         binary:split(Group2, <<",">>, [global, trim_all]),
 
-    {binary_to_integer(Grid_Position),
-     binary_to_integer(X_Position),
-     binary_to_integer(Y_Position),
-     binary_to_integer(Tribe),
-     binary_to_integer(Village_Id),
-     Village_Name,
-     binary_to_integer(Player_Id),
-     Player_Name,
-     binary_to_integer(Alliance_Id),
-     Alliance_Name,
-     binary_to_integer(Population),
-     travian_to_region(Region),
-     travian_to_bool(Is_Capital),
-     travian_to_bool(Is_City),
-     travian_to_bool(Has_Harbor),
-     travian_to_victory_points(VictoryPoints)}.
+    {
+        binary_to_integer(Grid_Position),
+        binary_to_integer(X_Position),
+        binary_to_integer(Y_Position),
+        binary_to_integer(Tribe),
+        binary_to_integer(Village_Id),
+        Village_Name,
+        binary_to_integer(Player_Id),
+        Player_Name,
+        binary_to_integer(Alliance_Id),
+        Alliance_Name,
+        binary_to_integer(Population),
+        travian_to_region(Region),
+        travian_to_bool(Is_Capital),
+        travian_to_bool(Is_City),
+        travian_to_bool(Has_Harbor),
+        travian_to_victory_points(VictoryPoints)
+    }.
 
 -spec handle_tides(Split :: [binary()]) -> travian_record().
-handle_tides([Group1,
-              Village_Name,
-              Player_Id_Dirt,
-              Player_Name,
-              Alliance_Id_Dirt,
-              Alliance_Name,
-              Population_Dirt,
-              Region,
-              Group2]) ->
+handle_tides([
+    Group1,
+    Village_Name,
+    Player_Id_Dirt,
+    Player_Name,
+    Alliance_Id_Dirt,
+    Alliance_Name,
+    Population_Dirt,
+    Region,
+    Group2
+]) ->
     Player_Id = binary:replace(Player_Id_Dirt, <<",">>, <<"">>, [global]),
     Alliance_Id = binary:replace(Alliance_Id_Dirt, <<",">>, <<"">>, [global]),
     Population = binary:replace(Population_Dirt, <<",">>, <<"">>, [global]),
@@ -174,22 +196,24 @@ handle_tides([Group1,
     [Is_Capital, Is_City, Has_Harbor, VictoryPoints] =
         binary:split(Group2, <<",">>, [global, trim_all]),
 
-    {binary_to_integer(Grid_Position),
-     binary_to_integer(X_Position),
-     binary_to_integer(Y_Position),
-     binary_to_integer(Tribe),
-     binary_to_integer(Village_Id),
-     Village_Name,
-     binary_to_integer(Player_Id),
-     Player_Name,
-     binary_to_integer(Alliance_Id),
-     Alliance_Name,
-     binary_to_integer(Population),
-     travian_to_region(Region),
-     travian_to_bool(Is_Capital),
-     travian_to_bool(Is_City),
-     travian_to_bool(Has_Harbor),
-     travian_to_victory_points(VictoryPoints)}.
+    {
+        binary_to_integer(Grid_Position),
+        binary_to_integer(X_Position),
+        binary_to_integer(Y_Position),
+        binary_to_integer(Tribe),
+        binary_to_integer(Village_Id),
+        Village_Name,
+        binary_to_integer(Player_Id),
+        Player_Name,
+        binary_to_integer(Alliance_Id),
+        Alliance_Name,
+        binary_to_integer(Population),
+        travian_to_region(Region),
+        travian_to_bool(Is_Capital),
+        travian_to_bool(Is_City),
+        travian_to_bool(Has_Harbor),
+        travian_to_victory_points(VictoryPoints)
+    }.
 
 -spec travian_to_region(Region :: binary()) -> binary() | nil.
 travian_to_region(<<"NULL">>) ->
@@ -223,7 +247,7 @@ has_minimun_fifteen_comas_policy(Info) ->
     end.
 
 -spec try_line(Parser :: function(), Info :: binary()) ->
-                  {ok, travian_record()} | {error, any()}.
+    {ok, travian_record()} | {error, any()}.
 try_line(Parser, Info) ->
     try Parser(Info) of
         Record ->

@@ -1,11 +1,16 @@
 {"1.2.0",
-[{<<"proper">>,{pkg,<<"proper">>,<<"1.4.0">>},0},
- {<<"thoas">>,{pkg,<<"thoas">>,<<"0.2.0">>},0}]}.
+[{<<"eqwalizer_support">>,
+  {git_subdir,"https://github.com/whatsapp/eqwalizer.git",
+              {ref,"090fc58a083734956dbebe8ae357da0ce72d6fa4"},
+              "eqwalizer_support"},
+  0},
+ {<<"htmerl">>,{pkg,<<"htmerl">>,<<"0.1.0">>},0},
+ {<<"thoas">>,{pkg,<<"thoas">>,<<"1.0.0">>},0}]}.
 [
 {pkg_hash,[
- {<<"proper">>, <<"89A44B8C39D28BB9B4BE8E4D715D534905B325470F2E0EC5E004D12484A79434">>},
- {<<"thoas">>, <<"4D25BA900A1AAAEE758244C9B69CE0BC44E869ECBAA0817C2E783EE223C02F91">>}]},
+ {<<"htmerl">>, <<"CDB5F7DAC08617F7E039F74311A5B4E5F1909D2C363CF4A355D3DDE7B3CA6F37">>},
+ {<<"thoas">>, <<"567C03902920827A18A89F05B79A37B5BF93553154B883E0131801600CF02CE0">>}]},
 {pkg_hash_ext,[
- {<<"proper">>, <<"18285842185BD33EFBDA97D134A5CB5A0884384DB36119FEE0E3CFA488568CBB">>},
- {<<"thoas">>, <<"630AAEE57FB3FDE201578E787259E15E788A27733D49DE8DCCE1354DB1885B8D">>}]}
+ {<<"htmerl">>, <<"D932F76EA33C318A79F41A429FDBEAE30820390DDB72BA89F38EEF32FEC36395">>},
+ {<<"thoas">>, <<"FC763185B932ECB32A554FB735EE03C3B6B1B31366077A2427D2A97F3BD26735">>}]}
 ].

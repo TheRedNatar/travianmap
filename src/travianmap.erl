@@ -6,7 +6,7 @@
 
 % @doc Parse a binary map and transform the results in to a list of tuples.
 -spec parse_map(Binary_Map :: binary(), filter | no_filter) ->
-                   [{ok, travian_record()} | {error, any()}] | [travian_record()].
+    [{ok, travian_record()} | {error, any()}] | [travian_record()].
 parse_map(Binary_Map, filter) when is_binary(Binary_Map) ->
     travianmap_map:parse_map(Binary_Map);
 parse_map(Binary_Map, no_filter) when is_binary(Binary_Map) ->

@@ -27,12 +27,14 @@ request_travian_info(Url) ->
 -spec parse_body(Body :: binary()) -> map().
 parse_body(Body) ->
     FeaturesMaps =
-        [try_get_features(fun get_game_options/1, Body),
-         try_get_features(fun get_map_dims/1, Body),
-         try_get_features(fun get_world_id/1, Body),
-         try_get_features(fun get_speed/1, Body),
-         try_get_features(fun get_country/1, Body),
-         try_get_features(fun get_title/1, Body)],
+        [
+            try_get_features(fun get_game_options/1, Body),
+            try_get_features(fun get_map_dims/1, Body),
+            try_get_features(fun get_world_id/1, Body),
+            try_get_features(fun get_speed/1, Body),
+            try_get_features(fun get_country/1, Body),
+            try_get_features(fun get_title/1, Body)
+        ],
     lists:foldl(fun(X, Acc) -> maps:merge(Acc, X) end, #{}, FeaturesMaps).
 
 -spec get_game_options(Body :: binary()) -> map().
