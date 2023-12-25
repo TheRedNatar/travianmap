@@ -19,4 +19,4 @@ parse_line_test() ->
             building_plans_date => <<"2024-07-02">>,
             end_date => wonder
         },
-    ?assertEqual(Output, game_world_schedule:parse_line(Input)).
+    ?assertEqual({ok, Output}, game_world_schedule:parse_line(Input)).

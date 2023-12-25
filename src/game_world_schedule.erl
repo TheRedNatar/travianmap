@@ -17,7 +17,7 @@
     end_date => binary() | wonder
 }.
 
--spec get_servers() -> {ok, [server_metadata()]} | {error, any()}.
+-spec get_servers() -> {ok, [{ok, server_metadata()} | {error, [binary()]}]} | {error, any()}.
 get_servers() ->
     case get_body() of
         {ok, Body} ->
@@ -62,8 +62,9 @@ parse_line(Line) ->
         fun get_end_date/3
     ],
     {_, _, ServerMetadata, Logs} = lists:foldl(fun try_parse/2, {Line, Sax, #{}, []}, Functions),
+    io:format("The value is: ~p.", [ServerMetadata]),
     case maps:is_key(url, ServerMetadata) of
-        true -> ServerMetadata;
+        true -> {ok, ServerMetadata};
         _ -> {error, Logs}
     end.
 
@@ -154,7 +155,8 @@ get_server_url_from_redirect(TableUrl) when is_binary(TableUrl) ->
     case httpc:request(get, {binary:bin_to_list(RedirectUrl), []}, HttpOptions, Options) of
         {ok, {_StatusLine, HttpHeaders, _HttpBodyResult}} when is_list(HttpHeaders) ->
             case lists:filter(IsLocation, HttpHeaders) of
-                [{"location", RedirectedUrl}] when is_binary(RedirectedUrl) ->
+                %% [{"location", RedirectedUrl}] when is_binary(RedirectedUrl) ->
+                [{"location", RedirectedUrl}] ->
                     [ServerUrl, _] = string:split(RedirectedUrl, "/", trailing),
                     {ok, list_to_binary(ServerUrl)};
                 X ->

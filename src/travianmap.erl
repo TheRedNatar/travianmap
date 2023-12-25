@@ -22,6 +22,6 @@ get_map(Url) when is_binary(Url) ->
     end.
 
 % @doc Fetch current servers information from https://blog.travian.com/gameworld-schedule
--spec get_servers() -> {ok, [game_world_schedule:server_metadata()]} | {error, any()}.
+-spec get_servers() -> {ok, [{ok, game_world_schedule:server_metadata()} | {error, [binary()]}]} | {error, any()}.
 get_servers() ->
     game_world_schedule:get_servers().
