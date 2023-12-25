@@ -1,6 +1,7 @@
 -module(travianmap_map).
 
--export([parse_map/1, parse_map_nofilter/1, parse_line/1]).
+-export([parse_map/1, parse_line/1]).
+-export_type([village_record/0]).
 
 -define(SEPARATOR_CHAR, ",").
 -define(ESCAPE_CHAR, "'").
@@ -31,24 +32,11 @@
     victory_points := non_neg_integer() | nil
 }.
 
--spec parse_map_nofilter(Binary_Map :: binary()) ->
-    [{ok, travianmap_mapline:travian_record()} | {error, any()}].
-parse_map_nofilter(Binary_Map) ->
-    Parts = binary:split(Binary_Map, <<"\n">>, [global, trim_all]),
-    lists:map(fun(X) -> travianmap_mapline:parse_line(X) end, Parts).
-
--spec parse_map(Binary_Map :: binary()) -> [travianmap_mapline:travian_record()].
+-spec parse_map(Binary_Map :: binary()) ->
+    [{ok, village_record()} | {error, any()}].
 parse_map(Binary_Map) ->
-    NoFilter = parse_map_nofilter(Binary_Map),
-    lists:filtermap(
-        fun
-            ({ok, Value}) ->
-                {true, Value};
-            ({error, _}) ->
-                false
-        end,
-        NoFilter
-    ).
+    Parts = binary:split(Binary_Map, <<"\n">>, [global, trim_all]),
+    lists:map(fun(X) -> parse_line(X) end, Parts).
 
 -spec parse_line(Line :: binary()) -> {ok, village_record()} | {error, any()}.
 parse_line(Line) ->

@@ -1,6 +1,7 @@
 -module(game_world_schedule).
 
 -export([get_servers/0, parse_line/1]).
+-export_type([server_metadata/0]).
 
 -type server_metadata() :: #{
     url := binary(),
@@ -18,23 +19,6 @@
 
 -spec get_servers() -> {ok, [server_metadata()]} | {error, any()}.
 get_servers() ->
-    get_servers(filter).
--spec get_servers(filter | no_filter) -> {ok, [server_metadata()]} | {error, any()}.
-get_servers(filter) ->
-    case get_body() of
-        {ok, Body} ->
-            {ok,
-                lists:filter(
-                    fun
-                        ({error, _}) -> false;
-                        (_X) -> true
-                    end,
-                    parse_body(Body)
-                )};
-        {error, Reason} ->
-            {error, Reason}
-    end;
-get_servers(no_filter) ->
     case get_body() of
         {ok, Body} ->
             {ok, parse_body(Body)};
@@ -168,9 +152,9 @@ get_server_url_from_redirect(TableUrl) when is_binary(TableUrl) ->
         end,
 
     case httpc:request(get, {binary:bin_to_list(RedirectUrl), []}, HttpOptions, Options) of
-        {ok, {_StatusLine, HttpHeaders, _HttpBodyResult}} ->
+        {ok, {_StatusLine, HttpHeaders, _HttpBodyResult}} when is_list(HttpHeaders) ->
             case lists:filter(IsLocation, HttpHeaders) of
-                [{"location", RedirectedUrl}] ->
+                [{"location", RedirectedUrl}] when is_binary(RedirectedUrl) ->
                     [ServerUrl, _] = string:split(RedirectedUrl, "/", trailing),
                     {ok, list_to_binary(ServerUrl)};
                 X ->
