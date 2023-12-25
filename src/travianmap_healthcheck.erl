@@ -5,18 +5,22 @@
 -spec is_healthy(R :: travianmap_mapline:travian_record()) -> true | {false, atom()}.
 is_healthy(R) ->
     FChecks =
-        [{fun grid_position_is_pos_integer/1, grid_position_is_pos_integer},
-         {fun tribe_is_between_integer/1, tribe_is_between_integer},
-         {fun village_id_is_non_integer/1, village_id_is_non_integer},
-         {fun player_id_is_non_integer/1, player_id_is_non_integer},
-         {fun alliance_id_is_non_integer/1, alliance_id_is_non_integer},
-         {fun population_is_non_neg_integer/1, population_is_non_neg_integer},
-         {fun victory_points_is_non_integer/1, victory_points_is_non_integer}],
+        [
+            {fun grid_position_is_pos_integer/1, grid_position_is_pos_integer},
+            {fun tribe_is_between_integer/1, tribe_is_between_integer},
+            {fun village_id_is_non_integer/1, village_id_is_non_integer},
+            {fun player_id_is_non_integer/1, player_id_is_non_integer},
+            {fun alliance_id_is_non_integer/1, alliance_id_is_non_integer},
+            {fun population_is_non_neg_integer/1, population_is_non_neg_integer},
+            {fun victory_points_is_non_integer/1, victory_points_is_non_integer}
+        ],
     is_healthy(R, FChecks).
 
--spec is_healthy(R :: travianmap_mapline:travian_record(),
-                 FChecks :: [{fun((travianmap_mapline:travian_record()) -> boolean()), atom()}]) ->
-                    true | {false, atom()}.
+-spec is_healthy(
+    R :: travianmap_mapline:travian_record(),
+    FChecks :: [{fun((travianmap_mapline:travian_record()) -> boolean()), atom()}]
+) ->
+    true | {false, atom()}.
 is_healthy(_R, []) ->
     true;
 is_healthy(R, [{F, FunName} | Tail]) ->
