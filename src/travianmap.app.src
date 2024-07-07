@@ -1,8 +1,8 @@
 {application, travianmap, [
     {description, "Get Travian data with Erlang"},
-    {vsn, "1.0.0"},
+    {vsn, "1.1.0"},
     {registered, []},
-    {applications, [kernel, stdlib, inets]},
+    {applications, [kernel, stdlib, inets, htmerl, thoas]},
     {env, []},
     {modules, []},
     {licenses, ["Apache-2.0"]},

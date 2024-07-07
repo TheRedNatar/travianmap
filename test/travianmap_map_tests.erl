@@ -2,6 +2,13 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+invalid_line_dont_throw_test() ->
+    Input = <<"very bad line">>,
+    Output = {error, {badmatch, <<"very bad line">>}},
+    ?assertEqual(Output, travianmap_map:parse_line(Input)).
+    
+    
+
 schema_16_normal_line_test() ->
     Input =
         <<"INSERT INTO `x_world` VALUES (11481,52,172,1,49961,'Uusi kylä 6',18323,'sluibaaja',730,'HC',360,NULL,FALSE,NULL,NULL,NULL);">>,

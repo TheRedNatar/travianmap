@@ -11,7 +11,7 @@
 -define(ESCAPE_BIN, <<?ESCAPE_CHAR>>).
 -define(END_BIN, <<?END_CHAR>>).
 
--define(LINE_INTRO, "INSERT INTO `x_world` VALUES (").
+-include("constants.hrl").
 
 -type village_record() :: #{
     grid_position := integer(),
@@ -40,6 +40,14 @@ parse_map(Binary_Map) ->
 
 -spec parse_line(Line :: binary()) -> {ok, village_record()} | {error, any()}.
 parse_line(Line) ->
+    try unsafe_parse_line(Line) of
+        Result -> Result
+    catch
+        error:Throw -> {error, Throw}
+    end.
+
+-spec unsafe_parse_line(Line :: binary()) -> {ok, village_record()} | {error, any()}.
+unsafe_parse_line(Line) ->
     <<?LINE_INTRO, NewLine/binary>> = Line,
     case parse_line(NewLine, []) of
         {error, nomatch} ->

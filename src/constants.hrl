@@ -1,0 +1,1 @@
+-define(LINE_INTRO, "INSERT INTO `x_world` VALUES (").

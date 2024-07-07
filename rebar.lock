@@ -1,5 +1,9 @@
 {"1.2.0",
-[
+[{<<"eqwalizer_support">>,
+  {git_subdir,"https://github.com/whatsapp/eqwalizer.git",
+              {ref,"090fc58a083734956dbebe8ae357da0ce72d6fa4"},
+              "eqwalizer_support"},
+  0},
  {<<"htmerl">>,{pkg,<<"htmerl">>,<<"0.1.0">>},0},
  {<<"thoas">>,{pkg,<<"thoas">>,<<"1.0.0">>},0}]}.
 [
